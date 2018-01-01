@@ -15,9 +15,11 @@ docker build --tag addcn/nginx -f nginx/Dockerfile .
 #### Run Container
 
 ```shell
-docker run --name mysql -p 3306:3306 -v /root/bo/data/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -it addcn/mysql
-docker run --name php7 -p 9000:9000 -v /var/www/html:/usr/local/nginx/html --link mysql:mysql -it addcn/php7
-docker run --name nginx -p 80:80 -v /var/www/html:/usr/local/nginx/html --link php7:php7 -it addcn/nginx
+docker network create -d bridge my-net
+docker run --name redis2 -p 6379:6379 -d --network my-net redis
+docker run --name mysql -p 3306:3306 -d -v //Users/abc/data/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -it --network my-net addcn/mysql
+docker run --name php7 -p 9000:9000 -d -v /Users/abc/data/www:/usr/local/nginx/html -it --network my-net addcn/php7
+docker run --name nginx -p 80:80 -d -v /Users/abc/data/www:/usr/local/nginx/html -it --network my-net addcn/nginx
 ```
 
 #### Test PHP & MySQL
