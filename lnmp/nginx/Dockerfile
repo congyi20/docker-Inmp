@@ -30,6 +30,9 @@ RUN cd /tmp && \
 ENV HTTP_PHP_CONFIG \\\n\\\t#php\\\n\\\tlocation ~ \\\\.php$ {\\\n\\\t\\\troot    html;\\\n\\\t\\\tfastcgi_pass   php7:9000;\\\n\\\t\\\tfastcgi_index    index.php;\\\n\\\t\\\tfastcgi_param  SCRIPT_FILENAME    /usr/local/nginx/html\$fastcgi_script_name;\\\n\\\t\\\tinclude    fastcgi_params;\\\n\\\t}\\\n\\\n\\\t
 
 RUN sed -i -e "s@# deny access to .htaccess files, if Apache@${HTTP_PHP_CONFIG}# deny access to .htaccess files, if Apache@" /usr/local/nginx/conf/nginx.conf
+RUN mkdir /usr/local/nginx/conf/vhost && \
+    mkdir /usr/local/nginx/conf/rewrite && \
+    sed -i -e "$i ########################## vhost #############################\n\tinclude vhost/*.conf;" /usr/local/nginx/conf/nginx.conf
 
 
 EXPOSE 80 443
