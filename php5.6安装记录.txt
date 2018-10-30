@@ -1,0 +1,91 @@
+#安装依赖库
+yum install -y gcc automake autoconf libtool make gcc-c++ vixie-cron  wget zlib  file openssl-devel sharutils zip  bash vim cyrus-sasl-devel libmemcached libmemcached-devel libyaml libyaml-devel unzip libvpx-devel openssl-devel ImageMagick-devel  autoconf  tar gcc libxml2-devel gd-devel libmcrypt-devel libmcrypt mcrypt mhash libmcrypt libmcrypt-devel libxml2 libxml2-devel bzip2 bzip2-devel curl curl-devel libjpeg libjpeg-devel libpng libpng-devel freetype-devel bison libtool-ltdl-devel net-tools && \
+ 
+# 下载 php安装包
+wget http://cn2.php.net/distributions/php-5.6.0.tar.xz
+xz -d php-5.6.0.tar.xz
+tar xf php-5.6.0.tar -C /usr/local/src/
+
+# 创建 www 用户
+groupadd www
+useradd -g www -s /sbin/nologin -M www
+
+# 编译安装
+cd /usr/local/src/php-5.6.0
+./configure \
+--prefix=/usr/local/php \
+--with-config-file-path=/usr/local/php/etc \
+--enable-inline-optimization \
+--disable-debug \
+--disable-rpath \
+--enable-shared \
+--enable-opcache \
+--enable-fpm \
+--with-fpm-user=www \
+--with-fpm-group=www \
+--with-mysql=mysqlnd \
+--with-mysqli=mysqlnd \
+--with-pdo-mysql=mysqlnd \
+--with-gettext \
+--enable-mbstring \
+--with-iconv=/usr/local/libiconv \
+--with-mcrypt \
+--with-mhash \
+--with-openssl \
+--enable-bcmath \
+--enable-soap \
+--with-libxml-dir \
+--enable-pcntl \
+--enable-shmop \
+--enable-sysvmsg \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-sockets \
+--with-curl \
+--with-zlib \
+--enable-zip \
+--with-bz2 \
+--with-readline
+
+
+make && make install
+
+#配置PHP
+cp php.ini-development /usr/local/php/etc/php.ini
+cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf
+cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+chmod +x /etc/init.d/php-fpm
+service php-fpm start
+
+#环境变量
+PATH=$PATH:$HOME/bin:/usr/local/php/bin
+
+#错误记录
+报错：error: Don't know how to define struct flock on this system, set --enable-opcache=no
+URL:https://blog.csdn.net/Hehailiang_Dream/article/details/70337963
+
+cat /etc/ld.so.conf
+include ld.so.conf.d/*.conf
+/usr/local/lib
+ldconfig
+
+
+
+报错：Please reinstall the iconv library
+wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
+tar xvzf libiconv-1.14.tar.gz
+cd libiconv-1.14
+./configure
+make && make install
+编译安装libiconv报错：./stdio.h:1010:1: error: 'gets' undeclared here (not in a function)
+vi srclib/stdio.in.h
+
+#将698行的代码：_GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");替换为：
+
+#if defined(__GLIBC__) && !defined(__UCLIBC__) && !__GLIBC_PREREQ(2, 16)
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
+#endif
+本文来自 zsl10 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/zsl10/article/details/52143713
+
+
+
