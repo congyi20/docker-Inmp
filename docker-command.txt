@@ -22,6 +22,7 @@ docker run --name defend -p 29654:29654 -p 29654:29654/udp -d -v /Users/congyi/D
 docker run --name php7 -p 9000:9000 -d -v /Users/congyi/Documents/data/www:/usr/local/nginx/html -it --network yaplus-net yaplus/defend
 
 docker run --name php725 -p 7250:7250 -d -v /Users/congyi/Documents/data/www:/usr/local/nginx/html -it --network yaplus-net yaplus/php725
+docker run --name php7 -p 9000:9000 -d -v /Users/congyi/Documents/data/www:/usr/local/nginx/html -it --network yaplus-net yaplus/php725
 docker run --name php56 -p 5600:5600 -d -v /Users/congyi/Documents/data/www:/usr/local/nginx/html -it --network yaplus-net yaplus/php56
 
 
